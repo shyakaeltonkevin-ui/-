@@ -1,6 +1,4 @@
-// ============================================================
 // NAVBAR – open / close mobile menu
-// ============================================================
 
 const bar = document.getElementById('bar');
 const close = document.getElementById('close');
@@ -18,10 +16,7 @@ if (close) {
     });
 }
 
-
-// ============================================================
 // DROPDOWN LOGIC for mobile (≤768px)
-// ============================================================
 
 (function() {
     'use strict';
@@ -74,9 +69,7 @@ if (close) {
 })();
 
 
-// ============================================================
 // DEVELOPMENT PAGE – MODAL WITH NOTIFICATION & AUTO-REPLY
-// ============================================================
 
 const modal = document.getElementById('devModal');
 const openBtn = document.getElementById('openFormBtn');
