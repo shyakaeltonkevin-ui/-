@@ -19,64 +19,55 @@ if (close) {
 }
 
 
-// ============================================================
 // DROPDOWN LOGIC for mobile (≤768px)
-// ============================================================
 
 (function() {
     'use strict';
 
+
     const dropdownToggles = document.querySelectorAll('.dropdown > a');
 
-    dropdownToggles.forEach(function(toggle) {
-        toggle.addEventListener('click', function(e) {
-            if (window.innerWidth > 768) return;
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            const parentLi = this.parentElement;
-            const dropdownMenu = parentLi.querySelector('.dropdown-content');
-
-            if (dropdownMenu) {
-                document.querySelectorAll('.dropdown-content.open').forEach(function(menu) {
-                    if (menu !== dropdownMenu) {
-                        menu.classList.remove('open');
-                    }
-                });
-                dropdownMenu.classList.toggle('open');
-            }
-        });
-    });
-
+ 
     document.addEventListener('click', function(e) {
-        if (window.innerWidth > 768) return;
-        const isDropdown = e.target.closest('.dropdown');
-        if (!isDropdown) {
-            document.querySelectorAll('.dropdown-content.open').forEach(function(menu) {
-                menu.classList.remove('open');
+        const clickedInsideDropdown = e.target.closest('.dropdown');
+        if (!clickedInsideDropdown) {
+            document.querySelectorAll('.dropdown.open').forEach(function(dropdown) {
+                dropdown.classList.remove('open');
             });
         }
     });
 
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            if (window.innerWidth > 768) {
-                document.querySelectorAll('.dropdown-content.open').forEach(function(menu) {
-                    menu.classList.remove('open');
-                });
-            }
-        }, 200);
+    dropdownToggles.forEach(function(toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const parentDropdown = this.parentElement;
+
+            document.querySelectorAll('.dropdown.open').forEach(function(dropdown) {
+                if (dropdown !== parentDropdown) {
+                    dropdown.classList.remove('open');
+                }
+            });
+
+            parentDropdown.classList.toggle('open');
+        });
+
+        toggle.addEventListener('touchstart', function(e) {
+        }, { passive: true });
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.dropdown.open').forEach(function(dropdown) {
+                dropdown.classList.remove('open');
+            });
+        }
     });
 
 })();
 
 
-// ============================================================
 // DEVELOPMENT PAGE – MODAL WITH NOTIFICATION & AUTO-REPLY
-// ============================================================
 
 const modal = document.getElementById('devModal');
 const openBtn = document.getElementById('openFormBtn');
@@ -84,7 +75,6 @@ const closeBtn = document.querySelector('.modal-close');
 const form = document.getElementById('devForm');
 const submitBtn = document.getElementById('submitFormBtn');
 
-// ── Helper: show notification inside modal ──
 function showNotification(message, color = '#10b981') {
     const oldNote = document.querySelector('.form-notification');
     if (oldNote) oldNote.remove();
@@ -110,7 +100,6 @@ function showNotification(message, color = '#10b981') {
     modalContent.insertBefore(note, heading.nextSibling);
 }
 
-// ── Helper: reset form ──
 function resetForm() {
     form.reset();
     submitBtn.disabled = false;
@@ -119,7 +108,6 @@ function resetForm() {
     if (existingNote) existingNote.remove();
 }
 
-// ── Only run if modal elements exist ──
 if (modal && openBtn && closeBtn && form && submitBtn) {
 
     // Open modal
@@ -142,7 +130,6 @@ if (modal && openBtn && closeBtn && form && submitBtn) {
         }
     });
 
-    // ── ✅ EmailJS submission: Success depends ONLY on admin email ──
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -153,7 +140,6 @@ if (modal && openBtn && closeBtn && form && submitBtn) {
         const email = document.getElementById('devEmail').value;
         const message = document.getElementById('devMessage').value;
 
-        // ── Admin notification (to you) ──
         const adminParams = {
             from_name: name,
             from_email: email,
@@ -179,23 +165,20 @@ if (modal && openBtn && closeBtn && form && submitBtn) {
         // ── Step 1: Send admin email ──
         emailjs.send('service_nn38yk5selktion', 'template_6hen6as', adminParams)
             .then(() => {
-                // ✅ Admin sent successfully → Show success notification immediately
                 showNotification('✅ Message sent successfully! We\'ll get back to you shortly.');
                 
-                // Auto-close after 3 seconds
-                setTimeout(() => {
+                  setTimeout(() => {
                     modal.classList.remove('show');
                     resetForm();
-                }, 3000);
+                }, 3000); // close 3sec
 
-                // ── Step 2: Try to send auto-reply (in the background) ──
-                // This runs independently – success or failure doesn't affect the user
+                
+
                 emailjs.send('service_nn38yk5selktion', 'template_ntg6qug', autoReplyParams)
                     .then(() => {
                         console.log('✅ Auto-reply sent successfully to:', email);
                     })
                     .catch((autoError) => {
-                        // Auto-reply failed – log it but don't show error to user
                         console.warn('⚠️ Auto-reply failed but admin was sent:', autoError);
                     });
             })
@@ -208,4 +191,4 @@ if (modal && openBtn && closeBtn && form && submitBtn) {
             });
     });
 
-} // end if elements exist
+}
