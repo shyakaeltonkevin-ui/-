@@ -1,6 +1,5 @@
-// ============================================================
 // NAVBAR – open / close mobile menu
-// ============================================================
+
 
 const bar = document.getElementById('bar');
 const close = document.getElementById('close');
@@ -19,9 +18,8 @@ if (close) {
 }
 
 
-// ============================================================
 // DROPDOWN LOGIC for mobile (≤768px)
-// ============================================================
+
 
 (function() {
     'use strict';
