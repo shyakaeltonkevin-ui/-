@@ -942,7 +942,10 @@ footer .copyright {
         display: none;
     }
 
-    /* ----- Dropdown mobile override ----- */
+    .dropdown.open .dropdown-content {
+        display: block !important;
+    }
+}
     .dropdown-content {
         position: static;
         box-shadow: none;
