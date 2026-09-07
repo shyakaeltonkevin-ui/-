@@ -1,4 +1,4 @@
-/* ── Google Fonts import ── */
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Spartan:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 * {
@@ -26,7 +26,7 @@ h3 {
     font-size: 14px;
     line-height: 17px;
     font-weight: 500;
-    letter-spacing: 2.4px;    
+    letter-spacing: 2.4px;
     color: #222;
 }
 
@@ -93,9 +93,7 @@ body {
 }
 
 
-/* ──────────────────────────────────────
-   HEADER & LOGO
-────────────────────────────────────── */
+/* logo after setup */
 
 #header {
     display: flex;
@@ -165,7 +163,8 @@ body {
 }
 
 
-/* ────────────── DROPDOWN STYLES ────────────── */
+
+
 .dropdown-content {
     display: none;
     position: absolute;
@@ -201,15 +200,17 @@ body {
     color: #085381 !important;
 }
 
+/* ── Hover (Desktop) ── */
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
+/* ── Click (Mobile) ── */
 .dropdown-content.open {
     display: block;
 }
 
-.dropdown > a::after {
+.dropdown>a::after {
     content: " ▾";
     font-size: 1.2rem;
     opacity: 0.8;
@@ -219,15 +220,13 @@ body {
     vertical-align: middle;
 }
 
-.dropdown:hover > a::after {
+.dropdown:hover>a::after {
     transform: rotate(180deg);
     transition: transform 0.5s;
 }
 
 
-/* ──────────────────────────────────────
-   ABOUT SECTION – 2 columns
-────────────────────────────────────── */
+
 
 #about {
     background: #f8f9fc;
@@ -315,9 +314,7 @@ body {
 }
 
 
-/* ──────────────────────────────────────
-   PAGE HEADER (Hero)
-────────────────────────────────────── */
+
 
 #page-header {
     background: linear-gradient(135deg, #8c8c8c 0%, #7f8b98 50%, #939191 100%);
@@ -487,7 +484,8 @@ body {
 }
 
 @keyframes pulse-dot {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
         opacity: 0.4;
     }
@@ -498,9 +496,7 @@ body {
 }
 
 
-/* ──────────────────────────────────────
-   SPECIALTIES SECTION
-────────────────────────────────────── */
+
 
 #specialties {
     background: #b8bbbb;
@@ -571,9 +567,7 @@ body {
 }
 
 
-/* ──────────────────────────────────────
-   DEVELOPMENT HERO – image right, text left
-────────────────────────────────────── */
+
 
 #development-hero {
     background: #f8f9fc;
@@ -686,9 +680,7 @@ body {
 }
 
 
-/* ──────────────────────────────────────
-   MODAL STYLES
-────────────────────────────────────── */
+
 
 .modal {
     display: none;
@@ -720,8 +712,14 @@ body {
 }
 
 @keyframes slideDown {
-    from { transform: translateY(-30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .modal-close {
@@ -803,9 +801,6 @@ body {
 }
 
 
-/* ──────────────────────────────────────
-   FOOTER
-────────────────────────────────────── */
 
 footer {
     display: flex;
@@ -879,11 +874,8 @@ footer .copyright {
     margin-top: 20px;
 }
 
-
-/* ────────────── RESPONSIVE BREAKPOINTS ────────────── */
-
 @media (max-width: 768px) {
-    /* ----- Mobile header & navbar ----- */
+
     #mobile {
         display: flex;
         align-items: center;
@@ -942,10 +934,7 @@ footer .copyright {
         display: none;
     }
 
-    .dropdown.open .dropdown-content {
-        display: block !important;
-    }
-}
+    /* ----- Dropdown mobile ----- */
     .dropdown-content {
         position: static;
         box-shadow: none;
@@ -982,13 +971,19 @@ footer .copyright {
 
     .dropdown:hover .dropdown-content {
         display: none;
+        
     }
 
-    .dropdown > a::after {
+    .dropdown>a::after {
         font-size: 1rem;
     }
 
-    /* ----- Page header responsive ----- */
+    /* ── FORCE DROPDOWN VISIBILITY ON MOBILE ── */
+    .dropdown.open .dropdown-content {
+        display: block !important;
+    }
+
+    
     #page-header {
         padding: 60px 24px 70px 24px;
     }
@@ -1024,7 +1019,7 @@ footer .copyright {
         height: 8px;
     }
 
-    /* ----- Specialties responsive ----- */
+    
     #specialties {
         padding: 60px 30px;
     }
@@ -1038,79 +1033,95 @@ footer .copyright {
         font-size: 2rem;
     }
 
-    /* ----- About responsive ----- */
+    
     #about {
         padding: 40px 30px;
     }
+
     .about-container {
         flex-direction: column;
         text-align: center;
         gap: 30px;
     }
+
     .about-text {
         order: 2;
     }
+
     .about-image {
         order: 1;
     }
+
     .about-image img {
         width: 200px;
         height: 200px;
     }
+
     .about-text h2 {
         font-size: 32px;
     }
+
     .about-text h4 {
         font-size: 16px;
     }
+
     .about-text p {
         font-size: 15px;
     }
 
-    /* ----- Development hero responsive ----- */
+    
     #development-hero {
         padding: 40px 30px;
     }
+
     .dev-container {
         flex-direction: column;
         text-align: center;
         gap: 30px;
     }
+
     .dev-text {
         order: 2;
     }
+
     .dev-image {
         order: 1;
     }
+
     .dev-image img {
         width: 200px;
         height: 200px;
     }
+
     .dev-buttons {
         justify-content: center;
     }
+
     .dev-text h2 {
         font-size: 32px;
     }
+
     .dev-text h4 {
         font-size: 16px;
     }
+
     .dev-text p {
         font-size: 15px;
     }
 
-    /* ----- Footer responsive ----- */
     footer {
         padding: 30px 30px;
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
+
     footer .col {
         align-items: center;
         width: 100%;
     }
 }
+
 
 @media (max-width: 480px) {
     #page-header {
@@ -1158,16 +1169,20 @@ footer .copyright {
     #about {
         padding: 30px 16px;
     }
+
     .about-image img {
         width: 150px;
         height: 150px;
     }
+
     .about-text h2 {
         font-size: 26px;
     }
+
     .about-text h4 {
         font-size: 14px;
     }
+
     .about-text p {
         font-size: 14px;
     }
@@ -1175,24 +1190,30 @@ footer .copyright {
     #development-hero {
         padding: 30px 16px;
     }
+
     .dev-image img {
         width: 250px;
         height: 190px;
     }
+
     .dev-text h2 {
         font-size: 26px;
     }
+
     .dev-text h4 {
         font-size: 14px;
     }
+
     .dev-text p {
         font-size: 14px;
     }
+
     .dev-buttons .btn-primary,
     .dev-buttons .btn-secondary {
         padding: 10px 24px;
         font-size: 13px;
     }
+
     .modal-content {
         padding: 30px 20px;
     }
@@ -1201,11 +1222,3 @@ footer .copyright {
         padding: 50px 16px;
     }
 }
-
-
-
-/*
-
-
-
-*/
