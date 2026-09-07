@@ -1,145 +1,177 @@
-// ============================================================
-// NAVBAR – open / close mobile menu
-// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
 
-const bar = document.getElementById('bar');
-const close = document.getElementById('close');
-const nav = document.getElementById('navbar');
+    const bar = document.getElementById('bar');
+    const close = document.getElementById('close');
+    const nav = document.getElementById('navbar');
 
-if (bar) {
-    bar.addEventListener('click', () => {
-        nav.classList.add('active');
+    console.log('🔍 Mobile navbar elements:', { bar: !!bar, close: !!close, nav: !!nav });
+
+    if (bar && nav) {
+        bar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            nav.classList.add('active');
+            console.log('✅ Navbar opened');
+        });
+    }
+
+    if (close && nav) {
+        close.addEventListener('click', function(e) {
+            e.stopPropagation();
+            nav.classList.remove('active');
+            console.log('✅ Navbar closed (via X)');
+        });
+    }
+
+    
+    if (nav) {
+        const navLinks = nav.querySelectorAll('li a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                const parent = this.closest('.dropdown');
+                if (!parent) {
+                    nav.classList.remove('active');
+                    console.log('✅ Navbar closed (link clicked)');
+                }
+            });
+        });
+    }
+
+    
+    document.addEventListener('click', function(e) {
+        const header = document.getElementById('header');
+        if (nav && nav.classList.contains('active')) {
+            const isClickInside = header && header.contains(e.target);
+            if (!isClickInside) {
+                nav.classList.remove('active');
+                console.log('✅ Navbar closed (clicked outside)');
+            }
+        }
     });
-}
 
-if (close) {
-    close.addEventListener('click', () => {
-        nav.classList.remove('active');
-    });
-}
+});
 
 
-// ============================================================
-// DROPDOWN – works for both HOVER (mouse) and CLICK (touch)
-// ============================================================
-
+//dropdown
 (function() {
     'use strict';
 
-    // Get all dropdown toggles (the <a> inside .dropdown)
+    // Get all dropdown toggles
     const dropdownToggles = document.querySelectorAll('.dropdown > a');
 
-    // Close any open dropdown when clicking outside
+    console.log('🔍 Dropdown toggles found:', dropdownToggles.length);
+
+    // ── Close all dropdowns when clicking/tapping outside ──
     document.addEventListener('click', function(e) {
         const clickedInsideDropdown = e.target.closest('.dropdown');
         if (!clickedInsideDropdown) {
             document.querySelectorAll('.dropdown.open').forEach(function(dropdown) {
                 dropdown.classList.remove('open');
+                console.log('✅ Dropdown closed (clicked outside)');
             });
         }
     });
 
-    dropdownToggles.forEach(function(toggle) {
+    // ── Toggle dropdown on click/tap ──
+    dropdownToggles.forEach(function(toggle, index) {
         toggle.addEventListener('click', function(e) {
-            // Prevent the default anchor behavior (if href="#")
             e.preventDefault();
+            e.stopPropagation();
 
-            const parentDropdown = this.parentElement; // the <li> with class .dropdown
+            const parentDropdown = this.parentElement;
+            console.log(`🔽 Dropdown ${index + 1} clicked:`, parentDropdown);
 
             // Close any other open dropdowns
             document.querySelectorAll('.dropdown.open').forEach(function(dropdown) {
                 if (dropdown !== parentDropdown) {
                     dropdown.classList.remove('open');
+                    console.log('✅ Other dropdown closed');
                 }
             });
 
-            // Toggle the 'open' class on this dropdown
+            
+            
             parentDropdown.classList.toggle('open');
+            console.log('✅ Dropdown .open class:', parentDropdown.classList.contains('open') ? 'ADDED' : 'REMOVED');
         });
     });
 
-    // Close dropdowns when pressing Escape key
+    
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             document.querySelectorAll('.dropdown.open').forEach(function(dropdown) {
                 dropdown.classList.remove('open');
             });
+            const nav = document.getElementById('navbar');
+            if (nav) nav.classList.remove('active');
         }
     });
 
 })();
 
 
-// ============================================================
-// DEVELOPMENT PAGE – MODAL WITH NOTIFICATION & AUTO-REPLY
-// ============================================================
 
-const modal = document.getElementById('devModal');
-const openBtn = document.getElementById('openFormBtn');
-const closeBtn = document.querySelector('.modal-close');
-const form = document.getElementById('devForm');
-const submitBtn = document.getElementById('submitFormBtn');
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('devModal');
+    const openBtn = document.getElementById('openFormBtn');
+    const closeBtn = document.querySelector('.modal-close');
+    const form = document.getElementById('devForm');
+    const submitBtn = document.getElementById('submitFormBtn');
 
-// ── Helper: show notification inside modal ──
-function showNotification(message, color = '#10b981') {
-    const oldNote = document.querySelector('.form-notification');
-    if (oldNote) oldNote.remove();
+    if (!modal || !openBtn || !closeBtn || !form || !submitBtn) {
+        return;
+    }
 
-    const note = document.createElement('div');
-    note.className = 'form-notification';
-    note.textContent = message;
-    note.style.cssText = `
-        background: ${color};
-        color: #ffffff;
-        padding: 14px 18px;
-        border-radius: 10px;
-        margin: 0 0 16px 0;
-        font-weight: 600;
-        font-size: 15px;
-        text-align: center;
-        animation: slideDown 0.3s ease;
-        font-family: 'Montserrat', sans-serif;
-    `;
+    function showNotification(message, color = '#10b981') {
+        const oldNote = document.querySelector('.form-notification');
+        if (oldNote) oldNote.remove();
 
-    const modalContent = document.querySelector('.modal-content');
-    const heading = modalContent.querySelector('h3');
-    modalContent.insertBefore(note, heading.nextSibling);
-}
+        const note = document.createElement('div');
+        note.className = 'form-notification';
+        note.textContent = message;
+        note.style.cssText = `
+            background: ${color};
+            color: #ffffff;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin: 0 0 16px 0;
+            font-weight: 600;
+            font-size: 15px;
+            text-align: center;
+            animation: slideDown 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        `;
 
-// ── Helper: reset form ──
-function resetForm() {
-    form.reset();
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Submit';
-    const existingNote = document.querySelector('.form-notification');
-    if (existingNote) existingNote.remove();
-}
+        const modalContent = document.querySelector('.modal-content');
+        const heading = modalContent.querySelector('h3');
+        modalContent.insertBefore(note, heading.nextSibling);
+    }
 
-// ── Only run if modal elements exist ──
-if (modal && openBtn && closeBtn && form && submitBtn) {
+    function resetForm() {
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+        const existingNote = document.querySelector('.form-notification');
+        if (existingNote) existingNote.remove();
+    }
 
-    // Open modal
-    openBtn.addEventListener('click', (e) => {
+    openBtn.addEventListener('click', function(e) {
         e.preventDefault();
         modal.classList.add('show');
     });
 
-    // Close modal (X button)
-    closeBtn.addEventListener('click', () => {
+    closeBtn.addEventListener('click', function() {
         modal.classList.remove('show');
         resetForm();
     });
 
-    // Close modal (click outside)
-    window.addEventListener('click', (e) => {
+    window.addEventListener('click', function(e) {
         if (e.target === modal) {
             modal.classList.remove('show');
             resetForm();
         }
     });
 
-    // ── ✅ EmailJS submission: Success depends ONLY on admin email ──
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', function(e) {
         e.preventDefault();
 
         submitBtn.disabled = true;
@@ -149,7 +181,6 @@ if (modal && openBtn && closeBtn && form && submitBtn) {
         const email = document.getElementById('devEmail').value;
         const message = document.getElementById('devMessage').value;
 
-        // ── Admin notification (to you) ──
         const adminParams = {
             from_name: name,
             from_email: email,
@@ -165,40 +196,63 @@ if (modal && openBtn && closeBtn && form && submitBtn) {
             })
         };
 
-        // ── Auto-reply (to the user) ──
         const autoReplyParams = {
             name: name,
             title: 'Website Development Consultation',
             to_email: email,
         };
 
-        // ── Step 1: Send admin email ──
         emailjs.send('service_nn38yk5selktion', 'template_6hen6as', adminParams)
-            .then(() => {
-                // ✅ Admin sent successfully → Show success notification immediately
+            .then(function() {
                 showNotification('✅ Message sent successfully! We\'ll get back to you shortly.');
-                
-                // Auto-close after 3 seconds
-                setTimeout(() => {
+                setTimeout(function() {
                     modal.classList.remove('show');
                     resetForm();
                 }, 3000);
 
-                // ── Step 2: Try to send auto-reply (in the background) ──
                 emailjs.send('service_nn38yk5selktion', 'template_ntg6qug', autoReplyParams)
-                    .then(() => {
-                        console.log('✅ Auto-reply sent successfully to:', email);
+                    .then(function() {
+                        console.log('✅ Auto-reply sent to:', email);
                     })
-                    .catch((autoError) => {
-                        console.warn('⚠️ Auto-reply failed but admin was sent:', autoError);
+                    .catch(function(autoError) {
+                        console.warn('⚠️ Auto-reply failed:', autoError);
                     });
             })
-            .catch((error) => {
+            .catch(function(error) {
                 console.error('EmailJS error:', error);
                 showNotification('❌ Failed to send. Please try again.', '#ef4444');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit';
             });
     });
+});
 
-} // end if elements exist
+//count
+document.addEventListener('DOMContentLoaded', function() {
+    const counterElement = document.getElementById('visitorCount');
+    if (!counterElement) return;
+
+    const API_BASE = 'http://localhost:5000/api/visits';
+
+    (async function updateVisitorCount() {
+        try {
+            const sessionKey = 'visitor_counted';
+            if (!sessionStorage.getItem(sessionKey)) {
+                await fetch(API_BASE, { method: 'POST' });
+                sessionStorage.setItem(sessionKey, 'true');
+            }
+
+            const response = await fetch(API_BASE);
+            const data = await response.json();
+
+            if (data.success) {
+                counterElement.textContent = data.count;
+            } else {
+                throw new Error('API returned error');
+            }
+        } catch (error) {
+            console.warn('⚠️ Visitor counter error:', error);
+            counterElement.textContent = '❤️';
+        }
+    })();
+});
